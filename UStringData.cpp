@@ -15,12 +15,11 @@ struct CalculateGrowingBlockSizeResult
     uint32_t elementCount;
 };
 
-uint32_t qCalculateBlockSize(uint32_t elementCount, uint32_t elementSize, uint32_t headerSize) noexcept
+uint32_t UStrCalculateBlockSize(uint32_t elementCount, uint32_t elementSize, uint32_t headerSize) noexcept
 {
     USTR_ASSERT(elementSize);
 
     uint32_t bytes;
-    static_assert(sizeof(size_t) == 8, "");
 
     if (unlikely(mul_overflow(uint32_t(elementSize), uint32_t(elementCount), &bytes)) ||
         unlikely(add_overflow(bytes, uint32_t(headerSize), &bytes)))
@@ -44,13 +43,13 @@ constexpr inline uint64_t qNextPowerOfTwo(uint64_t v)
 }
 
 CalculateGrowingBlockSizeResult
-qCalculateGrowingBlockSize(uint32_t elementCount, uint32_t elementSize, uint32_t headerSize) noexcept
+UStrCalculateGrowingBlockSize(uint32_t elementCount, uint32_t elementSize, uint32_t headerSize) noexcept
 {
     CalculateGrowingBlockSizeResult result = {
             uint32_t(-1), uint32_t(-1)
     };
 
-    uint32_t bytes = qCalculateBlockSize(elementCount, elementSize, headerSize);
+    uint32_t bytes = UStrCalculateBlockSize(elementCount, elementSize, headerSize);
     if (bytes < 0)
         return result;
 
@@ -75,11 +74,11 @@ static inline uint32_t calculateBlockSize(uint32_t &capacity, uint32_t objectSiz
     // allocSize = objectSize * capacity + headerSize, but checked for overflow
     // plus padded to grow in size
     if (option == UStringData::Grow) {
-        auto r = qCalculateGrowingBlockSize(capacity, objectSize, headerSize);
+        auto r = UStrCalculateGrowingBlockSize(capacity, objectSize, headerSize);
         capacity = r.elementCount;
         return r.size;
     } else {
-        return qCalculateBlockSize(capacity, objectSize, headerSize);
+        return UStrCalculateBlockSize(capacity, objectSize, headerSize);
     }
 }
 
