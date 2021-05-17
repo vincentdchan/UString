@@ -17,8 +17,8 @@ public:
     // unsigned enums: even if the enum is unsigned, the enum tags are
     // always signed
 #  if !defined(__LP64__) && !defined(Q_CLANG_QDOC)
-    constexpr inline JetFlag(long value) noexcept : i(int(value)) {}
-    constexpr inline JetFlag(unsigned long value) noexcept : i(int(long(value))) {}
+    constexpr inline UStrFlag(long value) noexcept : i(int(value)) {}
+    constexpr inline UStrFlag(unsigned long value) noexcept : i(int(long(value))) {}
 #  endif
     constexpr inline UStrFlag(uint32_t value) noexcept : i(int(value)) {}
     constexpr inline UStrFlag(short value) noexcept : i(int(value)) {}
@@ -30,9 +30,9 @@ template<typename Enum>
 class UStrFlags
 {
     static_assert((sizeof(Enum) <= sizeof(int)),
-                  "JetFlags uses an int as storage, so an enum with underlying "
+                  "UStrFlag uses an int as storage, so an enum with underlying "
                   "long long will overflow.");
-    static_assert((std::is_enum<Enum>::value), "JetFlags is only usable on enumeration types.");
+    static_assert((std::is_enum<Enum>::value), "UStrFlag is only usable on enumeration types.");
 
 public:
 #if defined(Q_CC_MSVC) || defined(Q_CLANG_QDOC)
@@ -49,8 +49,8 @@ public:
     typedef Enum enum_type;
     // compiler-generated copy/move ctor/assignment operators are fine!
 #ifdef Q_CLANG_QDOC
-    constexpr inline JetFlags(const JetFlags &other);
-    constexpr inline JetFlags &operator=(const JetFlags &other);
+    constexpr inline UStrFlag(const UStrFlag &other);
+    constexpr inline UStrFlag &operator=(const UStrFlag &other);
 #endif
     constexpr inline UStrFlags() noexcept : i(0) {}
     constexpr inline UStrFlags(Enum flags) noexcept : i(Int(flags)) {}
