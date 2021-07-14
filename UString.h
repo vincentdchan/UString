@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <atomic>
 #include <functional>
+#include <vector>
 #include <string>
 #include <locale>
 #include <codecvt>
@@ -97,6 +98,9 @@ public:
 
     inline void clear()
     { if (!isNull()) *this = UString(); }
+
+    [[nodiscard]]
+    std::vector<UString> split(const UString &sep) const;
 
 private:
     UString(uint32_t size, bool init) noexcept;

@@ -641,6 +641,38 @@ std::string UString::toStdString() const {
     return convertFromUnicode(constData(), size());
 }
 
+static int64_t find_string(const char16_t* str, uint32_t size, uint32_t start, const char16_t* sep, uint32_t sep_size) {
+    for (uint32_t i = 0; i < size; i++) {
+        if (i + sep_size >= size) {
+            return -1;
+        }
+        if (::memcmp(str + i, sep, sizeof(char16_t) * sep_size) == 0) {  // found
+            return i;
+        }
+    }
+    return -1;
+}
+
+std::vector<UString> UString::split(const UString &sep) const {
+    std::vector<UString> result;
+
+    int64_t start = 0;
+    int64_t end = 0;
+
+    while ((end = find_string(sep.constData(), sep.length(), start, sep.constData(), sep.length())) != -1) {
+        if (start != end) {
+            result.push_back(this->mid(start, end - start));
+        }
+        start = end + sep.size();
+    }
+
+    if (start != this->size()) {
+        result.push_back(this->mid(start));
+    }
+
+    return result;
+}
+
 void UString::reallocData(uint32_t alloc, UStringData::AllocationOption option)
 {
     if (!alloc) {
