@@ -643,7 +643,7 @@ std::string UString::toStdString() const {
 
 static int64_t find_string(const char16_t* str, uint32_t size, uint32_t start, const char16_t* sep, uint32_t sep_size) {
     for (uint32_t i = start; i < size; i++) {
-        if (i + sep_size >= size) {
+        if (i + sep_size > size) {
             return -1;
         }
         if (::memcmp(str + i, sep, sizeof(char16_t) * sep_size) == 0) {  // found
